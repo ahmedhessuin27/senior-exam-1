@@ -75,9 +75,13 @@ session_start();
                                     </ul>
                                 </div>
                                 <div class="header__btn d-none d-md-block">
-                                    <a href="" class="btn">Login</a>
+                                    <?php if(isset($_SESSION['uname'])):?>
                                     <a href="" class="btn">Logout</a>
+                                    <?php else:?>
+                                    <a href="" class="btn">Login</a>
                                     <a href="" class="btn">Register</a>
+                                     <?php endif?>
+                                    
                                 </div>
                             </nav>
                         </div>

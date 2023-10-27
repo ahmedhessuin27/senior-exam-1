@@ -124,7 +124,7 @@ if(!empty($choose)){
 
 
        }
-        if(!empty($all_errors)){
+        if(!empty($all_errors)&&$flag!=6){
            foreach($all_errors as $error){
                echo $error;
            }
