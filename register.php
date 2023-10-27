@@ -1,9 +1,128 @@
 <?php
-        foreach($_POST as $ele){
-            if(isset($ele)){
+       if(isset($_POST["username"])&&isset($_POST["email"])&&isset($_POST["picture"])&&isset($_POST["res"])&&isset($_POST["password"])&&isset($_POST["confirmpassword"])){
+           $flag=0; 
+           $all_errors=[];
+           $name=$_POST["username"];
+           $mail=$_POST["email"];
+           $pic=$_POST["picture"];
+           $choose=$_POST["res"];
+           $pas=$_POST["password"];
+           $conpas=$_POST["confirmpassword"];
+            if(!empty($name)){
+    if(strlen($name)>=5 && strlen($name)<=20){
+      if(preg_match('/^[A-Za-z0-9_]+$/',$name)){
+          
+        $flag++;
+
+      }else{
+
+        $all_errors['nameval']='user name must contain alphanumeric characters and underscores only';
+
+      }
+
+    }else{
+
+       $all_errors['namelen']='username should have from 5 to 20 characters';
+
+    }
+
+  }else{
+
+    $all_errors['emptyname']='empty username';
+
+  }
+    if(!empty($mail)){
+     if (filter_var($mai, FILTER_VALIDATE_EMAIL)) {
+       
+        $flag++;
+
+   }else{
+
+    $all_errors['invalid']='Invalid email format.';
+
+   }
+  }else{
+
+    $all_errors['emptyemail']='Email cannot be empty.';
+
+  }
+
+$allowed_img=['jpg','png','jpeg',];
+if($_SERVER['REQUEST_METHOD']=='POST'){
+
+    if(isset($_FILES['picture'])){
+        if($_FILES['picture']['error']!=4){
+            
+               $my_pic = $_FILES['picture'];        
+                $pic_size= $my_pic['size'];
+                $pic_name=uniqid() .$my_pic['name'];
+                $pic_tmp=$my_pic['tmp_name'];
+                $pic_path=$my_pic['full_path'];
+
+                $img_ext=explode('.',$pic_name);
+                $img_f_ext=end($img_ext);
+                $ext=strtolower($img_f_ext);
+                if($pic_size<1572864){
+                if(in_array($ext,$allowed_img)){
+
+                 move_uploaded_file($pic_tmp,'uploads/profile'. $pic_name);
+
+                }else{
+                    $flag++;
+
+                    $all_errors['img_type']=' Invalid image type. Only JPEG, PNG, and JPG are allowed.';
+                }
                 
+
+
+            }else{
+
+                $all_errors['size_file']='Image is too large. Maximum size is 1.5 megabytes.';
             }
+            
+            
+
+        }else{
+
+              $all_errors['select_file']='Error uploading image.';
         }
+    }
+}
+if(!empty($choose)){
+  $flag++;
+}else{
+    $all_errors['choose_role']='Must Check on Role cannot be empty.';
+}
+
+  if(!empty($pas)){
+    if(strlen($pas)>=8){
+       if(preg_match('/^[A-Za-z0-9_]+$/', $pas)){
+             
+           $flag++;
+
+       }else{
+
+        $all_errors['passupp']='Password can only contain letters, numbers, and underscores.';
+
+       } 
+    }else{
+
+        $all_errors['passlen']='Password must be at least 8 characters long.';
+
+    }
+  }else{
+
+    $all_errors['emptypass']='Password cannot be empty.';
+
+  }
+  if($pas==$conpas){
+    $flag++;
+  }else{
+    $all_errors['doesntmatch']='Passwords do not match.';
+  }
+
+
+       }
 ?>
 
 <!DOCTYPE html>
@@ -172,11 +291,19 @@
 </head>
 
 <body>
+      <?php if(!empty($all_errors)) :?>
+        <?php foreach($all_errors as $error):?>
+            <div class="alert alert-info">
+                 <?= $error ?>
+            </div>
+        <?php endforeach ?>
+    <?php endif ?>
     <div class="background">
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form method="POST">
+   
+    <form method="POST" enctype="multipart/form-data">
         <h3>Register Here</h3>
 
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
