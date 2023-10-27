@@ -1,3 +1,11 @@
+<?php
+        foreach($_POST as $ele){
+            if(isset($ele)){
+                
+            }
+        }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -168,7 +176,7 @@
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form>
+    <form method="POST">
         <h3>Register Here</h3>
 
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
@@ -187,28 +195,28 @@
         </svg>
 
         <label for="username">Username</label>
-        <input type="text" placeholder="username" id="username">
+        <input type="text" placeholder="username" id="username" name="username">
 
 
         <label for="email">Email</label>
-        <input type="text" placeholder="email" id="email">
+        <input type="text" placeholder="email" id="email" name="email">
 
 
         <label for="img">Profile Image</label>
-        <input type="file" id="img">
+        <input type="file" id="img" name="picture">
 
 
         <label for="username">User Type</label>
-        <input type="radio"><span class="spn-radio">Admin</span>
-        <input type="radio"><span class="spn-radio">User</span>
+        <input type="radio"><span class="spn-radio" name="res" value="admin">Admin</span>
+        <input type="radio"><span class="spn-radio" name="res" value="user">User</span>
 
 
         <label for="password">Password</label>
-        <input type="password" placeholder="Password" id="password">
+        <input type="password" placeholder="Password" id="password" name="password">
 
 
         <label for="co-password">confirm Password</label>
-        <input type="password" placeholder="Confirm Password" id="co-password">
+        <input type="password" placeholder="Confirm Password" id="co-password" name="confirmpassword">
 
 
         <button>Log In</button>
