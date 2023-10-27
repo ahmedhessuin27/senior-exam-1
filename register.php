@@ -121,10 +121,7 @@ if(!empty($choose)){
   }else{
     $all_errors['doesntmatch']='Passwords do not match.';
   }
-
-
-       }
-        if(!empty($all_errors)&&$flag!=6){
+ if(!empty($all_errors)&&$flag!=6){
            foreach($all_errors as $error){
                echo $error;
            }
@@ -137,6 +134,9 @@ if(!empty($choose)){
             $_SESSION["pic"]=$pic_name;
                 header('location:login.php');
         }
+
+       }
+       
     
         
 ?>
@@ -146,7 +146,7 @@ if(!empty($choose)){
 
 <head>
     <!-- Design by foolishdeveloper.com -->
-    <title>Glassmorphism login Form Tutorial in html css</title>
+    <title>Glassmorphism register Form Tutorial in html css</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
