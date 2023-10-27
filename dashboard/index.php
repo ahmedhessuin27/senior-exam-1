@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!doctype html>
 <html lang="en">
 
@@ -441,10 +444,20 @@
                     <!-- User details -->
                     <div class="user-profile text-center mt-3">
                         <div class="">
-                            <img src="assets/images/users/avatar-1.jpg" alt="" class="avatar-md rounded-circle">
+                            <?php if(isset($_SESSION['uname'])):?>
+                            <img src="<?$_SESSION["pic"]:?>" alt="" class="avatar-md rounded-circle">
+                            <?php else:?>
+                            header('location:register.php');
+                             <?php endif?>
+                            
                         </div>
                         <div class="mt-3">
-                            <h4 class="font-size-16 mb-1">Julia Hudda</h4>
+                            <?php if(isset($_SESSION['uname'])):?>
+                            <?=$_SESSION['uname']?>
+                            <?php else:?>
+                            header('location:register.php');
+                             <?php endif?>
+                            <!-- <h4 class="font-size-16 mb-1">Julia Hudda</h4> -->
                             <span class="text-muted"><i class="ri-record-circle-line align-middle font-size-14 text-success"></i> Online</span>
                         </div>
                     </div>

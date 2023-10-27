@@ -1,11 +1,12 @@
 <?php
-       if(isset($_POST["username"])&&isset($_POST["email"])&&isset($_POST["picture"])&&isset($_POST["res"])&&isset($_POST["password"])&&isset($_POST["confirmpassword"])){
-           $flag=0; 
-           $all_errors=[];
+session_start();
+ $flag=0; 
+$all_errors=[];
+       if(isset($_POST["username"])&&isset($_POST["email"])&&isset($_FILES["picture"])&&isset($_POST["password"])&&isset($_POST["confirmpassword"])){
            $name=$_POST["username"];
            $mail=$_POST["email"];
-           $pic=$_POST["picture"];
-           $choose=$_POST["res"];
+           $my_pic = $_FILES["picture"];
+           $choose=$_POST["role"];
            $pas=$_POST["password"];
            $conpas=$_POST["confirmpassword"];
             if(!empty($name)){
@@ -32,7 +33,7 @@
 
   }
     if(!empty($mail)){
-     if (filter_var($mai, FILTER_VALIDATE_EMAIL)) {
+     if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
        
         $flag++;
 
@@ -65,7 +66,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                 if($pic_size<1572864){
                 if(in_array($ext,$allowed_img)){
 
-                 move_uploaded_file($pic_tmp,'uploads/profile'. $pic_name);
+                 move_uploaded_file($pic_tmp,'uploads/profile/'. $pic_name);
 
                 }else{
                     $flag++;
@@ -123,6 +124,21 @@ if(!empty($choose)){
 
 
        }
+        if(!empty($all_errors)){
+           foreach($all_errors as $error){
+               echo $error;
+           }
+                  
+        }else{
+            $_SESSION["uname"]=$name;
+            $_SESSION["emai"]=$mail;
+            $_SESSION["passs"]=$pas;
+            $_SESSION["role"]=$_POST["role"];
+            $_SESSION["pic"]=$pic_name;
+                header('location:login.php');
+        }
+    
+        
 ?>
 
 <!DOCTYPE html>
@@ -291,13 +307,7 @@ if(!empty($choose)){
 </head>
 
 <body>
-      <?php if(!empty($all_errors)) :?>
-        <?php foreach($all_errors as $error):?>
-            <div class="alert alert-info">
-                 <?= $error ?>
-            </div>
-        <?php endforeach ?>
-    <?php endif ?>
+    
     <div class="background">
         <div class="shape"></div>
         <div class="shape"></div>
@@ -334,9 +344,8 @@ if(!empty($choose)){
 
 
         <label for="username">User Type</label>
-        <input type="radio"><span class="spn-radio" name="res" value="admin">Admin</span>
-        <input type="radio"><span class="spn-radio" name="res" value="user">User</span>
-
+        <input type="radio" name="role" id="role" value="admin">Admin
+        <input type="radio" name="role" id="role" value="user">User
 
         <label for="password">Password</label>
         <input type="password" placeholder="Password" id="password" name="password">

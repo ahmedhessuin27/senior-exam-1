@@ -1,3 +1,20 @@
+<?php
+session_start();
+var_dump($_SESSION);
+if(isset($_POST["username"])&&isset($_POST["password"])){
+if($_POST["username"]==$_SESSION["uname"] ||$_POST["username"]==$_SESSION["emai"] ){
+    if($_POST["password"]==$_SESSION["passs"]){
+        if($_SESSION["role"]=="admin"){
+            header('location:dashboard/index.php');
+        }else{
+            header('location:front/index.php');
+        }
+    }
+}
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -152,14 +169,14 @@
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form>
+    <form method="POST">
         <h3>Login Here</h3>
 
         <label for="username">Username Or Email</label>
-        <input type="text" placeholder="Email or Username" id="username">
+        <input type="text" placeholder="Email or Username" id="username" name="username">
 
         <label for="password">Password</label>
-        <input type="password" placeholder="Password" id="password">
+        <input type="password" placeholder="Password" id="password" name="password">
 
         <button>Log In</button>
         <div class="social">
