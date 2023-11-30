@@ -1,5 +1,11 @@
 <?php
 session_start();
+if(isset($_SESSION['user_type'])){
+    $connection = mysqli_connect('localhost', 'root', '', 'crud_operation');
+    $state = "SELECT * FROM register WHERE id=$_SESSION[user_id]";
+    $execute = mysqli_query($connection, $state);
+    $data=mysqli_fetch_assoc($execute);
+}
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -75,11 +81,11 @@ session_start();
                                     </ul>
                                 </div>
                                 <div class="header__btn d-none d-md-block">
-                                    <?php if(isset($_SESSION['uname'])):?>
-                                    <a href="" class="btn">Logout</a>
+                                    <?php if(isset($_SESSION['user_type'])):?>
+                                    <a href="../logout.php" class="btn">Logout</a>
                                     <?php else:?>
-                                    <a href="" class="btn">Login</a>
-                                    <a href="" class="btn">Register</a>
+                                    <a href="../login.php" class="btn">Login</a>
+                                    <a href="../register.php" class="btn">Register</a>
                                      <?php endif?>
                                     
                                 </div>
@@ -127,7 +133,7 @@ session_start();
                 <div class="row align-items-center justify-content-center justify-content-lg-between">
                     <div class="col-lg-6 order-0 order-lg-2">
                         <div class="banner__img text-center text-xxl-end">
-                            <img src="assets/img/banner/banner_img.png" alt="">
+                            <img src="../uploads/profile/<?=$data['picture']?>" alt="">
                         </div>
                     </div>
                     <div class="col-xl-5 col-lg-6">

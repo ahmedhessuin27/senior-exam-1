@@ -1,16 +1,23 @@
 <?php
 session_start();
-var_dump($_SESSION);
-if(isset($_POST["username"])&&isset($_POST["password"])){
-if($_POST["username"]==$_SESSION["uname"] ||$_POST["username"]==$_SESSION["emai"] ){
-    if($_POST["password"]==$_SESSION["passs"]){
-        if($_SESSION["role"]=="admin"){
-            header('location:dashboard/index.php');
-        }else{
-            header('location:front/index.php');
+if($_SERVER['REQUEST_METHOD']=='POST'){
+    $uname=$_POST['email'];
+    $pas=$_POST['password'];
+    $connection = mysqli_connect('localhost', 'root', '', 'crud_operation');
+    $state = "SELECT * FROM register";
+    $execute = mysqli_query($connection, $state);
+    while($row=mysqli_fetch_assoc($execute)){
+        if($row['email']== $uname && $row['password'] == $pas){
+
+            $_SESSION['user_id']=$row['id'];
+            $_SESSION['user_type'] = $row['role'];
+            if($row['role']=='user'){
+                header('location:front/index.php');
+            }else{
+                header('location:dashboard/index.php');
+            }
         }
     }
-}
 }
 
 
@@ -173,7 +180,7 @@ if($_POST["username"]==$_SESSION["uname"] ||$_POST["username"]==$_SESSION["emai"
         <h3>Login Here</h3>
 
         <label for="username">Username Or Email</label>
-        <input type="text" placeholder="Email or Username" id="username" name="username">
+        <input type="text" placeholder="Email or Username" id="username" name="email">
 
         <label for="password">Password</label>
         <input type="password" placeholder="Password" id="password" name="password">

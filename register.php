@@ -1,144 +1,118 @@
 <?php
 session_start();
- $flag=0; 
-$all_errors=[];
-       if(isset($_POST["username"])&&isset($_POST["email"])&&isset($_FILES["picture"])&&isset($_POST["password"])&&isset($_POST["confirmpassword"])){
-           $name=$_POST["username"];
-           $mail=$_POST["email"];
-           $my_pic = $_FILES["picture"];
-           $choose=$_POST["role"];
-           $pas=$_POST["password"];
-           $conpas=$_POST["confirmpassword"];
-            if(!empty($name)){
-    if(strlen($name)>=5 && strlen($name)<=20){
-      if(preg_match('/^[A-Za-z0-9_]+$/',$name)){
-          
-        $flag++;
+$flag = 0;
+$all_errors = [];
+if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_FILES["picture"]) && isset($_POST["password"]) && isset($_POST["confirmpassword"])) {
+    $name = $_POST["username"];
+    $mail = $_POST["email"];
+    $my_pic = $_FILES["picture"];
+    $choose=$_POST["role"];
+    $pas = $_POST["password"];
+    $conpas = $_POST["confirmpassword"];
+    if (!empty($name)) {
+        if (strlen($name) >= 5 && strlen($name) <= 20) {
+            if (preg_match('/^[A-Za-z0-9_]+$/', $name)) {
 
-      }else{
+                $flag++;
+            } else {
 
-        $all_errors['nameval']='user name must contain alphanumeric characters and underscores only';
-
-      }
-
-    }else{
-
-       $all_errors['namelen']='username should have from 5 to 20 characters';
-
-    }
-
-  }else{
-
-    $all_errors['emptyname']='empty username';
-
-  }
-    if(!empty($mail)){
-     if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-       
-        $flag++;
-
-   }else{
-
-    $all_errors['invalid']='Invalid email format.';
-
-   }
-  }else{
-
-    $all_errors['emptyemail']='Email cannot be empty.';
-
-  }
-
-$allowed_img=['jpg','png','jpeg',];
-if($_SERVER['REQUEST_METHOD']=='POST'){
-
-    if(isset($_FILES['picture'])){
-        if($_FILES['picture']['error']!=4){
-            
-               $my_pic = $_FILES['picture'];        
-                $pic_size= $my_pic['size'];
-                $pic_name=uniqid() .$my_pic['name'];
-                $pic_tmp=$my_pic['tmp_name'];
-                $pic_path=$my_pic['full_path'];
-
-                $img_ext=explode('.',$pic_name);
-                $img_f_ext=end($img_ext);
-                $ext=strtolower($img_f_ext);
-                if($pic_size<1572864){
-                if(in_array($ext,$allowed_img)){
-
-                 move_uploaded_file($pic_tmp,'uploads/profile/'. $pic_name);
-
-                }else{
-                    $flag++;
-
-                    $all_errors['img_type']=' Invalid image type. Only JPEG, PNG, and JPG are allowed.';
-                }
-                
-
-
-            }else{
-
-                $all_errors['size_file']='Image is too large. Maximum size is 1.5 megabytes.';
+                $all_errors['nameval'] = 'user name must contain alphanumeric characters and underscores only';
             }
-            
-            
+        } else {
 
-        }else{
+            $all_errors['namelen'] = 'username should have from 5 to 20 characters';
+        }
+    } else {
 
-              $all_errors['select_file']='Error uploading image.';
+        $all_errors['emptyname'] = 'empty username';
+    }
+    if (!empty($mail)) {
+        if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+
+            $flag++;
+        } else {
+
+            $all_errors['invalid'] = 'Invalid email format.';
+        }
+    } else {
+
+        $all_errors['emptyemail'] = 'Email cannot be empty.';
+    }
+
+    $allowed_img = ['jpg', 'png', 'jpeg',];
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+        if (isset($_FILES['picture'])) {
+            if ($_FILES['picture']['error'] != 4) {
+
+                $my_pic = $_FILES['picture'];
+                $pic_size = $my_pic['size'];
+                $pic_name = uniqid() . $my_pic['name'];
+                $pic_tmp = $my_pic['tmp_name'];
+                $pic_path = $my_pic['full_path'];
+
+                $img_ext = explode('.', $pic_name);
+                $img_f_ext = end($img_ext);
+                $ext = strtolower($img_f_ext);
+                if ($pic_size < 1572864) {
+                    if (in_array($ext, $allowed_img)) {
+
+                        move_uploaded_file($pic_tmp, 'uploads/profile/' . $pic_name);
+                    } else {
+                        $flag++;
+
+                        $all_errors['img_type'] = ' Invalid image type. Only JPEG, PNG, and JPG are allowed.';
+                    }
+                } else {
+
+                    $all_errors['size_file'] = 'Image is too large. Maximum size is 1.5 megabytes.';
+                }
+            } else {
+
+                $all_errors['select_file'] = 'Error uploading image.';
+            }
         }
     }
-}
-if(!empty($choose)){
-  $flag++;
-}else{
-    $all_errors['choose_role']='Must Check on Role cannot be empty.';
-}
 
-  if(!empty($pas)){
-    if(strlen($pas)>=8){
-       if(preg_match('/^[A-Za-z0-9_]+$/', $pas)){
-             
-           $flag++;
 
-       }else{
+    if (!empty($pas)) {
+        if (strlen($pas) >= 8) {
+            if (preg_match('/^[A-Za-z0-9_]+$/', $pas)) {
 
-        $all_errors['passupp']='Password can only contain letters, numbers, and underscores.';
+                $flag++;
+            } else {
 
-       } 
-    }else{
+                $all_errors['passupp'] = 'Password can only contain letters, numbers, and underscores.';
+            }
+        } else {
 
-        $all_errors['passlen']='Password must be at least 8 characters long.';
+            $all_errors['passlen'] = 'Password must be at least 8 characters long.';
+        }
+    } else {
+
+        $all_errors['emptypass'] = 'Password cannot be empty.';
+    }
+    if ($pas == $conpas) {
+        $flag++;
+    } else {
+        $all_errors['doesntmatch'] = 'Passwords do not match.';
+    }
+    if (!empty($all_errors) && $flag != 6) {
+        foreach ($all_errors as $error) {
+            echo $error;
+        }
+    } else {
+        $connection=mysqli_connect('localhost','root','','crud_operation');
+        $state="INSERT INTO register(name,email,password,picture,role)
+        VALUES('$name','$mail','$pas','$pic_name','$choose')";
+        $execute = mysqli_query($connection, $state);
+        header('location:login.php');
 
     }
-  }else{
+}
 
-    $all_errors['emptypass']='Password cannot be empty.';
 
-  }
-  if($pas==$conpas){
-    $flag++;
-  }else{
-    $all_errors['doesntmatch']='Passwords do not match.';
-  }
- if(!empty($all_errors)&&$flag!=6){
-           foreach($all_errors as $error){
-               echo $error;
-           }
-                  
-        }else{
-            $_SESSION["uname"]=$name;
-            $_SESSION["emai"]=$mail;
-            $_SESSION["passs"]=$pas;
-            $_SESSION["role"]=$_POST["role"];
-            $_SESSION["pic"]=$pic_name;
-                header('location:login.php');
-        }
 
-       }
-       
-    
-        
 ?>
 
 <!DOCTYPE html>
@@ -307,27 +281,29 @@ if(!empty($choose)){
 </head>
 
 <body>
-    
+    <!-- <div>
+        <?= "<pre>" ?>
+        <?php var_dump($_POST["role"]); ?>
+        <?= "</pre>" ?>
+
+    </div> -->
     <div class="background">
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-   
+
     <form method="POST" enctype="multipart/form-data">
         <h3>Register Here</h3>
 
         <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
             <symbol id="check-circle-fill" viewBox="0 0 16 16">
-                <path
-                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
             </symbol>
             <symbol id="info-fill" viewBox="0 0 16 16">
-                <path
-                    d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
             </symbol>
             <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
-                <path
-                    d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
             </symbol>
         </svg>
 
@@ -345,7 +321,7 @@ if(!empty($choose)){
 
         <label for="username">User Type</label>
         <input type="radio" name="role" id="role" value="admin">Admin
-        <input type="radio" name="role" id="role" value="user">User
+        <input type="radio" name="role" id="role" value="user" checked>User
 
         <label for="password">Password</label>
         <input type="password" placeholder="Password" id="password" name="password">
@@ -355,9 +331,10 @@ if(!empty($choose)){
         <input type="password" placeholder="Confirm Password" id="co-password" name="confirmpassword">
 
 
-        <button>Log In</button>
         <div class="social">
-            <div class="go"><i class="fab fa-google"></i> login </div>
+            <button class="go" style="background-color: gray;">
+                <i class="fab fa-google"></i> login
+            </button>
         </div>
     </form>
 </body>
